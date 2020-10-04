@@ -158,6 +158,9 @@ class _BetterPlayerMaterialControlsState
           color: Colors.white,
         ),
       ),
+      onTap: () {
+        onShowMoreClicked();
+      },
     );
   }
 
