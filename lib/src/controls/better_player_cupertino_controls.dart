@@ -282,15 +282,15 @@ class _BetterPlayerCupertinoControlsState
     );
   }
 
-  GestureDetector _buildMuteButton(
+  Widget _buildMuteButton(
     VideoPlayerController controller,
     Color backgroundColor,
     Color iconColor,
     double barHeight,
     double buttonPadding,
   ) {
-    return GestureDetector(
-      onTap: () {
+    return RawMaterialButton(
+      onPressed: () {
         _cancelAndRestartTimer();
 
         if (_latestValue.volume == 0) {
@@ -300,31 +300,16 @@ class _BetterPlayerCupertinoControlsState
           controller.setVolume(0.0);
         }
       },
-      child: AnimatedOpacity(
-        opacity: _hideStuff ? 0.0 : 1.0,
-        duration: _controlsConfiguration.controlsHideTime,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 10.0),
-            child: Container(
-              color: backgroundColor,
-              child: Container(
-                height: barHeight,
-                padding: EdgeInsets.symmetric(
-                  horizontal: buttonPadding,
-                ),
-                child: Icon(
-                  (_latestValue != null && _latestValue.volume > 0)
-                      ? _controlsConfiguration.muteIcon
-                      : _controlsConfiguration.unMuteIcon,
-                  color: iconColor,
-                  size: 16.0,
-                ),
-              ),
-            ),
-          ),
-        ),
+      elevation: 2.0,
+      fillColor: Color(0xff5E4BB6),
+      padding: EdgeInsets.all(8.0),
+      shape: CircleBorder(),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Icon(
+        (_latestValue != null && _latestValue.volume > 0)
+            ? _controlsConfiguration.muteIcon
+            : _controlsConfiguration.unMuteIcon,
+        color: Colors.white,
       ),
     );
   }
