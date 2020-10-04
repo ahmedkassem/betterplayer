@@ -259,40 +259,25 @@ class _BetterPlayerCupertinoControlsState
     );
   }
 
-  GestureDetector _buildMoreButton(
+  Widget _buildMoreButton(
     VideoPlayerController controller,
     Color backgroundColor,
     Color iconColor,
     double barHeight,
     double buttonPadding,
   ) {
-    return GestureDetector(
-      onTap: () {
+    return RawMaterialButton(
+      onPressed: () {
         onShowMoreClicked();
       },
-      child: AnimatedOpacity(
-        opacity: _hideStuff ? 0.0 : 1.0,
-        duration: _controlsConfiguration.controlsHideTime,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.0),
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 10.0),
-            child: Container(
-              color: backgroundColor,
-              child: Container(
-                height: barHeight,
-                padding: EdgeInsets.symmetric(
-                  horizontal: buttonPadding,
-                ),
-                child: Icon(
-                  Icons.more_vert,
-                  color: iconColor,
-                  size: 16.0,
-                ),
-              ),
-            ),
-          ),
-        ),
+      elevation: 2.0,
+      fillColor: Color(0xff5E4BB6),
+      padding: EdgeInsets.all(8.0),
+      shape: CircleBorder(),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Icon(
+        Icons.more_vert,
+        color: Colors.white,
       ),
     );
   }
