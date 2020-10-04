@@ -66,9 +66,18 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         child: Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
             const SizedBox(width: 16),
-            Text(name),
+            Text(
+              name,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ),
