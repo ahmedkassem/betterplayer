@@ -143,27 +143,22 @@ class _BetterPlayerMaterialControlsState
   }
 
   Widget _buildMoreButton() {
-    return BetterPlayerMaterialClickableWidget(
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        child: RawMaterialButton(
-          onPressed: () {
-            onShowMoreClicked();
-          },
-          elevation: 2.0,
-          fillColor: Color(0xff5E4BB6),
-          padding: const EdgeInsets.all(8),
-          shape: CircleBorder(),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          child: Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.all(8),
+      child: RawMaterialButton(
+        onPressed: () {
+          onShowMoreClicked();
+        },
+        elevation: 2.0,
+        fillColor: Color(0xff5E4BB6),
+        shape: CircleBorder(),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        child: Icon(
+          Icons.more_vert,
+          color: Colors.white,
         ),
       ),
-      onTap: () {
-        onShowMoreClicked();
-      },
     );
   }
 

@@ -50,6 +50,9 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
                 Navigator.of(context).pop();
                 _showQualitiesSelectionWidget();
               }),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
