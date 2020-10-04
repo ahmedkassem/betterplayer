@@ -144,15 +144,19 @@ class _BetterPlayerMaterialControlsState
 
   Widget _buildMoreButton() {
     return BetterPlayerMaterialClickableWidget(
-      child: Container(
-        margin: EdgeInsets.only(
-          top: 20,
-        ),
-        padding: const EdgeInsets.all(8),
+      child: RawMaterialButton(
+        onPressed: () {
+          onShowMoreClicked();
+        },
+        elevation: 2.0,
+        fillColor: Color(0xff5E4BB6),
         child: Icon(
           Icons.more_vert,
-          color: Color(0xff5E4BB6),
+          color: Colors.white,
         ),
+        padding: EdgeInsets.all(8.0),
+        shape: CircleBorder(),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       onTap: () {
         onShowMoreClicked();
