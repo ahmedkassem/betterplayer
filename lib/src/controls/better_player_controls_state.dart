@@ -97,9 +97,9 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildSpeedRow(0.25),
-                  _buildSpeedRow(0.5),
-                  _buildSpeedRow(0.75),
+                  // _buildSpeedRow(0.25),
+                  // _buildSpeedRow(0.5),
+                  // _buildSpeedRow(0.75),
                   _buildSpeedRow(1.0),
                   _buildSpeedRow(1.25),
                   _buildSpeedRow(1.5),
@@ -116,7 +116,7 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
     assert(value != null, "Value can't be null");
     return BetterPlayerMaterialClickableWidget(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Row(
           children: [
             const SizedBox(width: 16),
