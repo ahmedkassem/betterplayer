@@ -51,7 +51,7 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
                 _showQualitiesSelectionWidget();
               }),
             SizedBox(
-              height: 20,
+              height: 48,
             ),
           ],
         ),
