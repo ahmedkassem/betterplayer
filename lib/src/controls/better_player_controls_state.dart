@@ -120,6 +120,7 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
             Text(
               "$value x",
               style: TextStyle(
+                  color: Colors.white,
                   fontWeight: getBetterPlayerController()
                               .videoPlayerController
                               .value
