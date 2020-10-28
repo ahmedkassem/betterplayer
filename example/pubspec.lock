@@ -102,6 +102,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
@@ -123,6 +128,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+3"
+  import_js_library:
+    dependency: transitive
+    description:
+      name: import_js_library
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   intl:
     dependency: transitive
     description:
@@ -130,6 +142,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.2"
   matcher:
     dependency: transitive
     description:
@@ -295,7 +314,21 @@ packages:
       name: wakelock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4+2"
+    version: "0.2.1"
+  wakelock_platform_interface:
+    dependency: transitive
+    description:
+      name: wakelock_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+1"
+  wakelock_web:
+    dependency: transitive
+    description:
+      name: wakelock_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0+2"
   win32:
     dependency: transitive
     description:
