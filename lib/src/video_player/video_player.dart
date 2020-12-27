@@ -268,20 +268,23 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
   /// null.
   /// **Android only**: The [formatHint] option allows the caller to override
   /// the video format detection code.
-  Future<void> setNetworkDataSource(
-    String dataSource, {
-    VideoFormat formatHint,
-    Future<ClosedCaptionFile> closedCaptionFile,
-    Map<String, String> headers,
-  }) {
+  Future<void> setNetworkDataSource(String dataSource,
+      {VideoFormat formatHint,
+      Future<ClosedCaptionFile> closedCaptionFile,
+      Map<String, String> headers,
+      bool useCache = false,
+      int maxCacheSize,
+      int maxCacheFileSize}) {
     return _setDataSource(
       DataSource(
-        sourceType: DataSourceType.network,
-        uri: dataSource,
-        formatHint: formatHint,
-        closedCaptionFile: closedCaptionFile,
-        headers: headers,
-      ),
+          sourceType: DataSourceType.network,
+          uri: dataSource,
+          formatHint: formatHint,
+          closedCaptionFile: closedCaptionFile,
+          headers: headers,
+          useCache: useCache,
+          maxCacheSize: maxCacheSize,
+          maxCacheFileSize: maxCacheFileSize),
     );
   }
 
@@ -303,6 +306,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
   }
 
   Future<void> _setDataSource(DataSource dataSourceDescription) async {
+    print("Set data source: $dataSourceDescription");
     if (_isDisposed) {
       return;
     }
@@ -469,8 +473,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
   /// [width] specifies width of the selected track
   /// [height] specifies height of the selected track
   /// [bitrate] specifies bitrate of the selected track
-  Future<void> setTrackParameters(
-      int width, int height, int bitrate) async {
+  Future<void> setTrackParameters(int width, int height, int bitrate) async {
     await _videoPlayerPlatform.setTrackParameters(
         _textureId, width, height, bitrate);
   }

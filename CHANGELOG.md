@@ -1,3 +1,87 @@
+## 0.0.37
+* Added setControlsEnabled to BetterPlayerController
+* Fixed example video list widget buttons not rendering correctly in small resolutions
+* Added setOverriddenAspectRatio to BetterPlayerController
+* Fixed crash connected with setSpeed in Android platform
+* Fixed deviceOrientationsOnFullScreen for iOS
+* Fixed CH translations (fixes by https://github.com/JarvanMo)
+* Click to show/hide controls (fixed by https://github.com/mtAlves)
+* [BREAKING_CHANGE] Removed future from isPlaying. Now it's sync method (https://github.com/hongfeiyang)
+
+## 0.0.36
+* Added INITIALIZED event
+* Added autoDetectFullscreenDeviceOrientation in BetterPlayerConfiguration
+* Fixed autoPlay background issue
+* Removed open_iconic_flutter icons used in Cupertino controls
+* Added cupertino_icons for icons used Cupertiono controls
+* Fixed progress bar not working correctly for iOS 12 with file datasource
+* Removed yellow line below progress text (fixed by https://github.com/mtAlves)
+
+## 0.0.35
+* Fixed iOS black screen issue
+* Fixed full screen placeholder issue
+* Fixed event not firing in enterFullScreen and exitFullScreen
+* Fixed subtitles parsing issues
+
+## 0.0.34
+* Added memory data source
+* Added factories: network, file, memory for BetterPlayerDataSource
+* Fixed missing useHlsTracks implementation
+* Fixed placeholder showing after full screen when using showPlaceholderUntilPlay
+* Added setControlsVisibility to BetterPlayerController
+* [BREAKING_CHANGE] Removed showControlsOnInitialize from BetterPlayerConfiguration. Use BetterPlayerControlsConfiguration to set showControlsOnInitialize parameter.
+* Fixed cupertino controls issue with hasError
+
+## 0.0.33
+* Fixed BetterPlayerEvent visibility
+* Fixed lazy initialization, when first data source is passed after player finishes first render
+* Added selectedByDefault to BetterPlayerSubtitlesConfiguration
+* Fixed HLS tracks android native code
+* Updated example
+
+## 0.0.32
+* Fixed locale picking when context is not mounted anymore
+* Added cache feature (based on https://github.com/sanekyy/plugins/tree/caching and https://github.com/vikram25897/flutter_cached_video_player solutions)
+* Added BetterPlayerCacheConfiguration to BetterPlayerDataSource
+* Refactored Android's native code
+
+## 0.0.31
+* Added showPlaceholderUntilPlay in BetterPlayerConfiguration
+* Fixed exception event not being triggered
+* Fixed controls not displaying on video finished
+
+## 0.0.30
+* Fixed issue when full screen was triggered twice if autoPlay and fullScreenByDefault were enabled
+* Removed flutter_widgets, since it's not maintained anymore. Added instead visibility_detector package (by https://github.com/espresso3389)
+* Added rewind and forward buttons for android player.
+* Fixed player UI's jank
+* Added enableSkips and skipsTimeInMilliseconds in BetterPlayerControlsConfiguration
+* Changed middle play button behavior (now it's only used for restart player).
+* Updated BetterPlayerControllerProvider visibility.
+* Override invalid dependency from wakelock library.
+
+## 0.0.29+1
+* Updated readme
+
+## 0.0.29
+* Fixed routePageBuilder usage from BetterPlayerConfiguration
+* Added overflowMenuIcon, playbackSpeedIcon, qualitiesIcon, subtitlesIcon, overflowMenuIconsColor to BetterPlayerControlsConfiguration
+* Added double tap to play/pause video (original idea by https://github.com/r6c)
+
+## 0.0.28
+* Fixed subtitles overflow issue when transitioning between fullscreen and normal state
+* Added alignment and backgroundColor in BetterPlayerSubtitlesConfiguration
+
+## 0.0.27
+* Added enableOverflowMenu option in BetterPlayerControlsConfiguration (enable/disable overflow menu)
+* Added overflowMenuCustomItems in BetterPlayerControlsConfiguration (show custom menu items in overflow menu)
+* [BREAKING_CHANGE] Removed defaultErrorText, loadingNextVideoText, liveText from BetterPlayerControlsConfiguration. To change these values, please use translations in BetterPlayerConfiguration.
+* Added BetterPlayerTranslations in BetterPlayerConfiguration. You can use it to setup translations of the player.
+
+## 0.0.26
+* Added fullScreenAspectRatio and deviceOrientationsOnFullScreen to handle different full screen scenarios
+* Updated wakelock version
+
 ## 0.0.25
 * [BREAKING_CHANGE]: changed API in BetterPlayerControlsConfiguration: enableQualities replaces enableTracks.
 * Added support for different video resolutions

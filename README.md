@@ -3,7 +3,6 @@
 </p>
 
 # Better Player
-
 [![pub package](https://img.shields.io/pub/v/better_player.svg)](https://pub.dartlang.org/packages/better_player)
 [![pub package](https://img.shields.io/github/license/jhomlala/betterplayer.svg?style=flat)](https://github.com/jhomlala/betterplayer)
 [![pub package](https://img.shields.io/badge/platform-flutter-blue.svg)](https://github.com/jhomlala/betterplayer)
@@ -25,6 +24,7 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 ✔️ Playback speed support  
 ✔️ HLS support (track, subtitles selection)  
 ✔️ Alternative resolution support  
+✔️ Cache support  
 ✔️ ... and much more! 
 
 
@@ -34,7 +34,7 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 
 ```yaml
 dependencies:
-  better_player: ^0.0.25
+  better_player: ^0.0.37
 ```
 
 2. Install it
@@ -170,8 +170,7 @@ BetterPlayerListViewPlayer will auto play/pause video once video is visible on s
 ```
 
 You can control BetterPlayerListViewPlayer with BetterPlayerListViewPlayerController. You need to pass
-BetterPlayerListViewPlayerController to BetterPlayerListVideoPlayer. See more here:
-https://github.com/jhomlala/betterplayer/blob/master/example/lib/video_list/video_list_widget.dart
+BetterPlayerListViewPlayerController to BetterPlayerListVideoPlayer. See more in example app.
 
 ### Subtitles
 Subtitles can be configured from 3 different sources: file, network and memory. Subtitles source is passed in BetterPlayerDataSource:
@@ -266,6 +265,9 @@ Possible configuration options:
     /// or played.
     final Widget placeholder;
 
+    /// Should the placeholder be shown until play is pressed
+    final bool showPlaceholderUntilPlay;
+
     /// A widget which is placed between the video and the controls
     final Widget overlay;
 
@@ -275,6 +277,11 @@ Possible configuration options:
     /// Defines if the player will sleep in fullscreen or not
     final bool allowedScreenSleep;
 
+    /// Defines aspect ratio which will be used in fullscreen
+    final double fullScreenAspectRatio;
+
+    /// Defines the set of allowed device orientations on entering fullscreen
+    final List<DeviceOrientation> deviceOrientationsOnFullScreen;
 
     /// Defines the system overlays visible after exiting fullscreen
     final List<SystemUiOverlay> systemOverlaysAfterFullScreen;
@@ -304,6 +311,18 @@ Possible configuration options:
     
     ///Defines function which will react on player visibility changed
     final Function(double visibilityFraction) playerVisibilityChangedBehavior;
+
+    ///Defines translations used in player. If null, then default english translations
+    ///will be used.
+    final List<BetterPlayerTranslations> translations;
+
+    ///Defines if player should auto detect full screen device orientation based
+    ///on aspect ratio of the video. If aspect ratio of the video is < 1 then
+    ///video will played in full screen in portrait mode. If aspect ratio is >= 1
+    ///then video will be played horizontally. If this parameter is true, then
+    ///[deviceOrientationsOnFullScreen] and [fullScreenAspectRatio] value will be
+    /// ignored.
+    final bool autoDetectFullscreenDeviceOrientation;
 ```
 
 ### BetterPlayerSubtitlesConfiguration
@@ -345,117 +364,143 @@ Possible configuration options:
 
   ///Bottom padding of the subtitle
   final double bottomPadding;
+
+  ///Alignment of the subtitle
+  final Alignment alignment;
+
+  ///Background color of the subtitle
+  final Color backgroundColor;
+
+  ///Subtitles selected by default, without user interaction
+  final bool selectedByDefault;
 ```
 
 ### BetterPlayerControlsConfiguration
 Configuration for player GUI. You should pass this configuration to BetterPlayerConfiguration.
 
 ```dart
-ar betterPlayerConfiguration = BetterPlayerConfiguration(
+var betterPlayerConfiguration = BetterPlayerConfiguration(
       controlsConfiguration: BetterPlayerControlsConfiguration(
         textColor: Colors.black,
         iconsColor: Colors.black,
       ),
     );
 ```
-
-Possible configuration options:
 ```dart
-  ///Color of the control bars
-  final Color controlBarColor;
+   ///Color of the control bars
+   final Color controlBarColor;
 
-  ///Color of texts
-  final Color textColor;
+   ///Color of texts
+   final Color textColor;
 
-  ///Color of icons
-  final Color iconsColor;
+   ///Color of icons
+   final Color iconsColor;
 
-  ///Icon of play
-  final IconData playIcon;
+   ///Icon of play
+   final IconData playIcon;
 
-  ///Icon of pause
-  final IconData pauseIcon;
+   ///Icon of pause
+   final IconData pauseIcon;
 
-  ///Icon of mute
-  final IconData muteIcon;
+   ///Icon of mute
+   final IconData muteIcon;
 
-  ///Icon of unmute
-  final IconData unMuteIcon;
+   ///Icon of unmute
+   final IconData unMuteIcon;
 
-  ///Icon of fullscreen mode enable
-  final IconData fullscreenEnableIcon;
+   ///Icon of fullscreen mode enable
+   final IconData fullscreenEnableIcon;
 
-  ///Icon of fullscreen mode disable
-  final IconData fullscreenDisableIcon;
+   ///Icon of fullscreen mode disable
+   final IconData fullscreenDisableIcon;
 
-  ///Cupertino only icon, icon of skip
-  final IconData skipBackIcon;
+   ///Cupertino only icon, icon of skip
+   final IconData skipBackIcon;
 
-  ///Cupertino only icon, icon of forward
-  final IconData skipForwardIcon;
+   ///Cupertino only icon, icon of forward
+   final IconData skipForwardIcon;
 
-  ///Flag used to enable/disable fullscreen
-  final bool enableFullscreen;
+   ///Flag used to enable/disable fullscreen
+   final bool enableFullscreen;
 
-  ///Flag used to enable/disable mute
-  final bool enableMute;
+   ///Flag used to enable/disable mute
+   final bool enableMute;
 
-  ///Flag used to enable/disable progress texts
-  final bool enableProgressText;
+   ///Flag used to enable/disable progress texts
+   final bool enableProgressText;
 
-  ///Flag used to enable/disable progress bar
-  final bool enableProgressBar;
+   ///Flag used to enable/disable progress bar
+   final bool enableProgressBar;
 
-  ///Flag used to enable/disable play-pause
-  final bool enablePlayPause;
+   ///Flag used to enable/disable play-pause
+   final bool enablePlayPause;
 
-  ///Progress bar played color
-  final Color progressBarPlayedColor;
+   ///Flag used to enable skip forward and skip back
+   final bool enableSkips;
 
-  ///Progress bar circle color
-  final Color progressBarHandleColor;
+   ///Progress bar played color
+   final Color progressBarPlayedColor;
 
-  ///Progress bar buffered video color
-  final Color progressBarBufferedColor;
+   ///Progress bar circle color
+   final Color progressBarHandleColor;
 
-  ///Progress bar background color
-  final Color progressBarBackgroundColor;
+   ///Progress bar buffered video color
+   final Color progressBarBufferedColor;
 
-  ///Time to hide controls
-  final Duration controlsHideTime;
+   ///Progress bar background color
+   final Color progressBarBackgroundColor;
 
-  ///Custom controls, it will override Material/Cupertino controls
-  final Widget customControls;
+   ///Time to hide controls
+   final Duration controlsHideTime;
 
-  ///Flag used to show/hide controls
-  final bool showControls;
+   ///Custom controls, it will override Material/Cupertino controls
+   final Widget customControls;
 
-  ///Flag used to show controls on init
-  final bool showControlsOnInitialize;
+   ///Flag used to show/hide controls
+   final bool showControls;
 
-  ///Control bar height
-  final double controlBarHeight;
+   ///Flag used to show controls on init
+   final bool showControlsOnInitialize;
 
-  ///Default error widget text
-  final String defaultErrorText;
+   ///Control bar height
+   final double controlBarHeight;
 
-  ///Default loading next video text
-  final String loadingNextVideoText;
+   ///Live text color;
+   final Color liveTextColor;
 
-  ///Text displayed when asset displayed in player is live stream
-  final String liveText;
+   ///Flag used to show/hide overflow menu which contains playback, subtitles,
+   ///qualities options.
+   final bool enableOverflowMenu;
 
-  ///Live text color;
-  final Color liveTextColor;
+   ///Flag used to show/hide playback speed
+   final bool enablePlaybackSpeed;
 
-  ///Flag used to show/hide playback speed
-  final bool enablePlaybackSpeed;
+   ///Flag used to show/hide subtitles
+   final bool enableSubtitles;
 
-  ///Flag used to show/hide subtitles
-  final bool enableSubtitles;
+   ///Flag used to show/hide qualities
+   final bool enableQualities;
 
-  ///Flag used to show/hide qualities
-  final bool enableQualities;
+   ///Custom items of overflow menu
+   final List<BetterPlayerOverflowMenuItem> overflowMenuCustomItems;
+
+   ///Icon of the overflow menu
+   final IconData overflowMenuIcon;
+
+   ///Icon of the playback speed menu item from overflow menu
+   final IconData playbackSpeedIcon;
+
+   ///Icon of the subtitles menu item from overflow menu
+   final IconData subtitlesIcon;
+
+   ///Icon of the qualities menu item from overflow menu
+   final IconData qualitiesIcon;
+
+   ///Color of overflow menu icons
+   final Color overflowMenuIconsColor;
+
+   ///Time which will be used once user uses rewind and forward
+   final int skipsTimeInMilliseconds;
 ```
 
 ### BetterPlayerPlaylistConfiguration
@@ -478,7 +523,10 @@ Possible configuration options:
 ```
 
 ### BetterPlayerDataSource
-Define source for one video in your app.
+Define source for one video in your app. There are 3 types of data sources:
+* Network - data source which uses url to play video from external resources
+* File - data source which uses url to play video from internal resources
+* Memory - data source which uses list of bytes to play video from memory
 ```dart
     var dataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.NETWORK,
@@ -490,6 +538,10 @@ Define source for one video in your app.
       headers: {"header":"my_custom_header"}
     );
 ```
+
+You can use type specific factories to build your data source.
+Use BetterPlayerDataSource.network to build network data source, BetterPlayerDataSource.file to build file data source and BetterPlayerDataSource.memory
+to build memory data source.
 
 Possible configuration options:
 ```
@@ -518,6 +570,31 @@ Possible configuration options:
   ///List of strings that represents tracks names.
   ///If empty, then better player will choose name based on track parameters
   final List<String> hlsTrackNames;
+
+  ///Optional, alternative resolutions for non-hls video. Used to setup
+  ///different qualities for video.
+  ///Data should be in given format:
+  ///{"360p": "url", "540p": "url2" }
+  final Map<String, String> resolutions;
+
+  ///Optional cache configuration, used only for network data sources
+  final BetterPlayerCacheConfiguration cacheConfiguration;
+```
+
+
+### BetterPlayerCacheConfiguration
+Define cache configuration for given data source. Cache works only for network data sources.
+```dart
+  ///Enable cache for network data source
+  final bool useCache;
+
+  /// The maximum cache size to keep on disk in bytes.
+  /// Android only option.
+  final int maxCacheSize;
+
+  /// The maximum size of each individual file in bytes.
+  /// Android only option.
+  final int maxCacheFileSize;
 ```
 
 
@@ -542,9 +619,49 @@ Possible configuration options:
   final String content;
 ```
 
+### BetterPlayerTranslations
+You can provide translations for different languages. You need to pass list of BetterPlayerTranslations to
+the BetterPlayerConfiguration. Here is an example:
+
+```dart
+ translations: [
+              BetterPlayerTranslations(
+                languageCode: "language_code for example pl",
+                generalDefaultError: "translated text",
+                generalNone: "translated text",
+                generalDefault: "translated text",
+                playlistLoadingNextVideo: "translated text",
+                controlsLive: "translated text",
+                controlsNextVideoIn: "translated text",
+                overflowMenuPlaybackSpeed: "translated text",
+                overflowMenuSubtitles: "translated text",
+                overflowMenuQuality: "translated text",
+              ),
+              BetterPlayerTranslations(
+                languageCode: "other language for example cz",
+                generalDefaultError: "translated text",
+                generalNone: "translated text",
+                generalDefault: "translated text",
+                playlistLoadingNextVideo: "translated text",
+                controlsLive: "translated text",
+                controlsNextVideoIn: "translated text",
+                overflowMenuPlaybackSpeed: "translated text",
+                overflowMenuSubtitles: "translated text",
+                overflowMenuQuality: "translated text",
+              ),
+            ],
+```
+There are 4 pre build in languages: EN, PL, ZH (chinese simplified), HI (hindi). If you didn't provide
+any translation then EN translations will be used or any of the pre build in translations, only if it's
+match current user locale.
+
+You need to setup localizations in your app first to make it work. Here's how you can do that:
+https://flutter.dev/docs/development/accessibility-and-localization/internationalization
+
 ### Listen to video events
 You can listen to video player events like:
 ```dart
+  INITIALIZED,
   PLAY,
   PAUSE,
   SEEK_TO,
@@ -554,11 +671,13 @@ You can listen to video player events like:
   PROGRESS,
   FINISHED,
   EXCEPTION,
+  CONTROLS_VISIBLE,
+  CONTROLS_HIDDEN,
   SET_SPEED,
-  CHANGED_SUBTITLES
-  CHANGED_TRACK
+  CHANGED_SUBTITLES,
+  CHANGED_TRACK,
   CHANGED_PLAYER_VISIBILITY,
-  CHANGED_RESOLUTION
+  CHANGED_RESOLUTION,
 ```
 
 After creating BetterPlayerController you can add event listener this way:
@@ -607,6 +726,31 @@ only for normal videos (non-hls) to setup different qualities of the original vi
           "EXTRA_LARGE":
               "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4"
         });
+```
+
+### Add custom element to overflow menu
+You can use BetterPlayerControlsConfiguration to add custom element to the overflow menu:
+```dart
+  controlsConfiguration: BetterPlayerControlsConfiguration(
+              overflowMenuCustomItems: [
+                BetterPlayerOverflowMenuItem(
+                  Icons.account_circle_rounded,
+                  "Custom element",
+                  () => print("Click!"),
+                )
+              ],
+            ),
+```
+
+### Enable/disable controls (always hidden if false)
+```dart
+    betterPlayerController.setControlsEnabled(false);
+```
+
+### Set overridden aspect ratio. If passed overriddenAspectRatio will be used instead of aspectRatio.
+If null then aspectRatio from BetterPlayerConfiguration will be used.
+```dart
+   betterPlayerController.setOverriddenAspectRatio(1.0);
 ```
 
 ### More documentation

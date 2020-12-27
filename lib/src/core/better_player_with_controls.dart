@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:better_player/better_player.dart';
 import 'package:better_player/src/controls/better_player_controls_configuration.dart';
 import 'package:better_player/src/controls/better_player_cupertino_controls.dart';
 import 'package:better_player/src/controls/better_player_material_controls.dart';
@@ -31,6 +33,8 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
   final StreamController<bool> playerVisibilityStreamController =
       StreamController();
 
+  bool _initalized = false;
+
   @override
   void initState() {
     playerVisibilityStreamController.add(true);
@@ -54,7 +58,11 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
   }
 
   void _onControllerChanged() {
-    setState(() {});
+    if (!_initalized) {
+      setState(() {
+        _initalized = true;
+      });
+    }
   }
 
   @override
@@ -62,13 +70,32 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
     final BetterPlayerController betterPlayerController =
         BetterPlayerController.of(context);
 
+    var aspectRatio;
+    if (betterPlayerController.isFullScreen) {
+      if (betterPlayerController
+          .betterPlayerConfiguration.autoDetectFullscreenDeviceOrientation) {
+        aspectRatio =
+            betterPlayerController?.videoPlayerController?.value?.aspectRatio ??
+                1.0;
+      } else {
+        aspectRatio = betterPlayerController
+                .betterPlayerConfiguration.fullScreenAspectRatio ??
+            BetterPlayerUtils.calculateAspectRatio(context);
+      }
+    } else {
+      aspectRatio = betterPlayerController.getAspectRatio();
+    }
+
+    if (aspectRatio == null) {
+      aspectRatio = 16 / 9;
+    }
+
     return Center(
       child: Container(
         width: double.infinity,
         color: Colors.black,
         child: AspectRatio(
-          aspectRatio: betterPlayerController.aspectRatio ??
-              BetterPlayerUtils.calculateAspectRatio(context),
+          aspectRatio: aspectRatio,
           child: _buildPlayerWithControls(betterPlayerController, context),
         ),
       ),
@@ -84,6 +111,11 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
       print("Invalid rotation provided. Using rotation = 0");
       rotation = 0;
     }
+    if (betterPlayerController.betterPlayerDataSource == null) {
+      return Container();
+    }
+    _initalized = true;
+
     return Container(
       child: Stack(
         fit: StackFit.passthrough,
@@ -120,10 +152,16 @@ class _BetterPlayerWithControlsState extends State<BetterPlayerWithControls> {
                 onControlsVisibilityChanged: onControlsVisibilityChanged,
                 controlsConfiguration: controlsConfiguration,
               )
-        // : BetterPlayerCupertinoControls(
-        //     onControlsVisibilityChanged: onControlsVisibilityChanged,
-        //     controlsConfiguration: controlsConfiguration,
-        //   )
+
+        // : Platform.isAndroid
+        //     ? BetterPlayerMaterialControls(
+        //         onControlsVisibilityChanged: onControlsVisibilityChanged,
+        //         controlsConfiguration: controlsConfiguration,
+        //       )
+        //     : BetterPlayerCupertinoControls(
+        //         onControlsVisibilityChanged: onControlsVisibilityChanged,
+        //         controlsConfiguration: controlsConfiguration,
+        //       )
         : const SizedBox();
   }
 
@@ -158,9 +196,18 @@ class _BetterPlayerVideoFitWidgetState
 
   VoidCallback _initializedListener;
 
+  bool _started = false;
+
   @override
   void initState() {
     super.initState();
+    if (!widget.betterPlayerController.betterPlayerConfiguration
+        .showPlaceholderUntilPlay) {
+      _started = true;
+    } else {
+      _started = widget.betterPlayerController.hasCurrentDataSourceStarted;
+    }
+
     _initialize();
   }
 
@@ -176,21 +223,38 @@ class _BetterPlayerVideoFitWidgetState
   }
 
   void _initialize() {
-    _initializedListener = () {
-      if (!mounted) {
-        return;
+    if (controller?.value?.initialized == false) {
+      _initializedListener = () {
+        if (!mounted) {
+          return;
+        }
+
+        if (_initialized != controller.value.initialized) {
+          _initialized = controller.value.initialized;
+          setState(() {});
+        }
+      };
+      controller.addListener(_initializedListener);
+    } else {
+      _initialized = true;
+    }
+    widget.betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.PLAY) {
+        if (widget.betterPlayerController.betterPlayerConfiguration
+                .showPlaceholderUntilPlay &&
+            !_started) {
+          setState(() {
+            _started =
+                widget.betterPlayerController.hasCurrentDataSourceStarted;
+          });
+        }
       }
-      if (_initialized != controller.value.initialized) {
-        _initialized = controller.value.initialized;
-        setState(() {});
-      }
-    };
-    controller.addListener(_initializedListener);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_initialized) {
+    if (_initialized && _started) {
       return Center(
         child: Container(
           width: double.infinity,
@@ -209,5 +273,12 @@ class _BetterPlayerVideoFitWidgetState
     } else {
       return Container();
     }
+  }
+
+  @override
+  void dispose() {
+    widget.betterPlayerController.videoPlayerController
+        .removeListener(_initializedListener);
+    super.dispose();
   }
 }
