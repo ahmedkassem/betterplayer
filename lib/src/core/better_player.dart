@@ -131,7 +131,7 @@ class BetterPlayerState extends State<BetterPlayer>
       Animation<double> animation,
       BetterPlayerControllerProvider controllerProvider) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       body: Container(
         alignment: Alignment.center,
         color: Colors.black,
