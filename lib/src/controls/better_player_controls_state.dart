@@ -341,6 +341,7 @@ abstract class BetterPlayerControlsState<T extends StatefulWidget>
             Text(
               "$trackName",
               style: TextStyle(
+                color: Colors.white,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
