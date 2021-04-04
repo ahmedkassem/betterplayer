@@ -310,20 +310,18 @@ class _BetterPlayerCupertinoControlsState
       onTap: () {
         onShowMoreClicked();
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: RawMaterialButton(
-          onPressed: () {
-            onShowMoreClicked();
-          },
-          elevation: 2.0,
-          fillColor: Color(0xff5E4BB6),
-          shape: CircleBorder(),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          child: Icon(
-            _controlsConfiguration.overflowMenuIcon,
-            color: _controlsConfiguration.iconsColor,
-          ),
+      child: RawMaterialButton(
+        onPressed: () {
+          onShowMoreClicked();
+        },
+        elevation: 2.0,
+        fillColor: Color(0xff5E4BB6),
+        shape: CircleBorder(),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: EdgeInsets.all(8.0),
+        child: Icon(
+          _controlsConfiguration.overflowMenuIcon,
+          color: _controlsConfiguration.iconsColor,
         ),
       ),
     );
