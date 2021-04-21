@@ -20,7 +20,7 @@ class _AutoFullscreenOrientationPageState
             fit: BoxFit.contain,
             autoDetectFullscreenDeviceOrientation: true);
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.NETWORK, Constants.forBiggerBlazesUrl);
+        BetterPlayerDataSourceType.network, Constants.forBiggerBlazesUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();
@@ -30,7 +30,7 @@ class _AutoFullscreenOrientationPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Normal player"),
+        title: Text("Auto full screen orientation"),
       ),
       body: Column(
         children: [
@@ -47,20 +47,20 @@ class _AutoFullscreenOrientationPageState
             aspectRatio: 16 / 9,
             child: BetterPlayer(controller: _betterPlayerController),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Play horizontal video"),
             onPressed: () {
               BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-                  BetterPlayerDataSourceType.NETWORK,
+                  BetterPlayerDataSourceType.network,
                   Constants.forBiggerBlazesUrl);
               _betterPlayerController.setupDataSource(dataSource);
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text("Play vertical video"),
             onPressed: () async {
               BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-                  BetterPlayerDataSourceType.NETWORK,
+                  BetterPlayerDataSourceType.network,
                   Constants.verticalVideoUrl);
               _betterPlayerController.setupDataSource(dataSource);
             },

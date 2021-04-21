@@ -9,6 +9,63 @@
 
 Advanced video player based on video_player and Chewie. It's solves many typical use cases and it's easy to run.
 
+<table>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/1.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/2.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/3.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/4.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/5.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/6.png">
+      </td>
+   </tr>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/7.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/8.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/9.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/10.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/11.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/12.png">
+      </td>
+   </tr>
+   <tr>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/13.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/14.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/15.png">
+      </td>
+      <td>
+         <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/master/media/16.png">
+      </td>
+    </tr>	
+</table>
+
 ## Introduction
 This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is awesome plugin and works well in many cases. Better Player is a continuation of ideas introduced in Chewie. Better player fix common bugs, adds more configuration options and solves typical use cases. 
 
@@ -22,10 +79,13 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 ✔️ HTTP Headers support  
 ✔️ BoxFit of video support  
 ✔️ Playback speed support  
-✔️ HLS support (track, subtitles selection)  
+✔️ HLS support (track, subtitles, audio track selection)  
 ✔️ Alternative resolution support  
 ✔️ Cache support  
-✔️ ... and much more! 
+✔️ Notifications support  
+✔️ Picture in Picture support     
+✔️ DRM support (token, Widevine)  
+✔️ ... and much more!  
 
 
 ## Install
@@ -34,7 +94,7 @@ This plugin is based on [Chewie](https://github.com/brianegan/chewie). Chewie is
 
 ```yaml
 dependencies:
-  better_player: ^0.0.37
+  better_player: ^0.0.61
 ```
 
 2. Install it
@@ -48,6 +108,10 @@ $ flutter packages get
 ```dart
 import 'package:better_player/better_player.dart';
 ```
+
+## Important information
+This plugin development is in progress. You may encounter breaking changes each version. This plugin is developed part-time for free. If you need
+some feature which is supported by other player available in pub dev, then feel free to create PR. All valuable contributions are welcome!
 
 ## General Usage
 Check [Example project](https://github.com/jhomlala/betterplayer/tree/master/example) which shows how to use Better Player in different scenarios.
@@ -93,7 +157,7 @@ BetterPlayerController _betterPlayerController;
   void initState() {
     super.initState();
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.NETWORK,
+        BetterPlayerDataSourceType.network,
         "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
     _betterPlayerController = BetterPlayerController(
         BetterPlayerConfiguration(),
@@ -121,16 +185,16 @@ To use playlist, you need to create dataset with multiple videos:
     List dataSourceList = List<BetterPlayerDataSource>();
     dataSourceList.add(
       BetterPlayerDataSource(
-        BetterPlayerDataSourceType.NETWORK,
+        BetterPlayerDataSourceType.network,
         "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
       ),
     );
     dataSourceList.add(
-      BetterPlayerDataSource(BetterPlayerDataSourceType.NETWORK,
+      BetterPlayerDataSource(BetterPlayerDataSourceType.network,
           "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
     );
     dataSourceList.add(
-      BetterPlayerDataSource(BetterPlayerDataSourceType.NETWORK,
+      BetterPlayerDataSource(BetterPlayerDataSourceType.network,
           "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8"),
     );
     return dataSourceList;
@@ -161,7 +225,7 @@ BetterPlayerListViewPlayer will auto play/pause video once video is visible on s
       aspectRatio: 16 / 9,
       child: BetterPlayerListVideoPlayer(
         BetterPlayerDataSource(
-            BetterPlayerDataSourceType.NETWORK, videoListData.videoUrl),
+            BetterPlayerDataSourceType.network, videoListData.videoUrl),
         key: Key(videoListData.hashCode.toString()),
         playFraction: 0.8,
       ),
@@ -178,10 +242,10 @@ Subtitles can be configured from 3 different sources: file, network and memory. 
 Network subtitles:
 ```dart
     var dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.NETWORK,
+      BetterPlayerDataSourceType.network,
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
       subtitles: BetterPlayerSubtitlesSource.single(
-          type: BetterPlayerSubtitlesSourceType.NETWORK,
+          type: BetterPlayerSubtitlesSourceType.network,
           url:
               "https://dl.dropboxusercontent.com/s/71nzjo2ux3evxqk/example_subtitles.srt"),
     );
@@ -190,10 +254,10 @@ Network subtitles:
 File subtitles:
 ```dart
  var dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.FILE,
+      BetterPlayerDataSourceType.file,
       "${directory.path}/testvideo.mp4",
       subtitles: BetterPlayerSubtitlesSource.single(
-        type: BetterPlayerSubtitlesSourceType.FILE,
+        type: BetterPlayerSubtitlesSourceType.file,
         url: "${directory.path}/example_subtitles.srt",
       ),
     );
@@ -201,14 +265,14 @@ File subtitles:
 You can pass multiple subtitles for one video:
 ```dart
 var dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.NETWORK,
+      BetterPlayerDataSourceType.network,
       "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
       liveStream: false,
       useHlsSubtitles: true,
       hlsTrackNames: ["Low quality", "Not so low quality", "Medium quality"],
       subtitles: [
         BetterPlayerSubtitlesSource(
-          type: BetterPlayerSubtitlesSourceType.NETWORK,
+          type: BetterPlayerSubtitlesSourceType.network,
           name: "EN",
           urls: [
             "https://dl.dropboxusercontent.com/s/71nzjo2ux3evxqk/example_subtitles.srt"
@@ -216,7 +280,7 @@ var dataSource = BetterPlayerDataSource(
         ),
 
         BetterPlayerSubtitlesSource(
-          type: BetterPlayerSubtitlesSourceType.NETWORK,
+          type: BetterPlayerSubtitlesSourceType.network,
           name: "DE",
           urls: [
             "https://dl.dropboxusercontent.com/s/71nzjo2ux3evxqk/example_subtitles.srt"
@@ -267,6 +331,11 @@ Possible configuration options:
 
     /// Should the placeholder be shown until play is pressed
     final bool showPlaceholderUntilPlay;
+
+    /// Placeholder position of player stack. If false, then placeholder will be
+    /// displayed on the bottom, so user need to hide it manually. Default is
+    /// true.
+    final bool placeholderOnTop;
 
     /// A widget which is placed between the video and the controls
     final Widget overlay;
@@ -323,6 +392,14 @@ Possible configuration options:
     ///[deviceOrientationsOnFullScreen] and [fullScreenAspectRatio] value will be
     /// ignored.
     final bool autoDetectFullscreenDeviceOrientation;
+
+    ///Defines flag which enables/disables lifecycle handling (pause on app closed,
+    ///play on app resumed). Default value is true.
+    final bool handleLifecycle;
+
+    ///Defines flag which enabled/disabled auto dispose on BetterPlayer dispose.
+    ///Default value is true.
+    final bool autoDispose;
 ```
 
 ### BetterPlayerSubtitlesConfiguration
@@ -432,6 +509,9 @@ var betterPlayerConfiguration = BetterPlayerConfiguration(
    ///Flag used to enable/disable progress bar
    final bool enableProgressBar;
 
+   ///Flag used to enable/disable progress bar drag
+   final bool enableProgressBarDrag;
+
    ///Flag used to enable/disable play-pause
    final bool enablePlayPause;
 
@@ -453,8 +533,12 @@ var betterPlayerConfiguration = BetterPlayerConfiguration(
    ///Time to hide controls
    final Duration controlsHideTime;
 
-   ///Custom controls, it will override Material/Cupertino controls
-   final Widget customControls;
+   ///Parameter used to build custom controls
+   final Widget Function(BetterPlayerController controller)
+       customControlsBuilder;
+
+   ///Parameter used to change theme of the player
+   final BetterPlayerTheme playerTheme;
 
    ///Flag used to show/hide controls
    final bool showControls;
@@ -481,6 +565,15 @@ var betterPlayerConfiguration = BetterPlayerConfiguration(
    ///Flag used to show/hide qualities
    final bool enableQualities;
 
+   ///Flag used to show/hide PiP mode
+   final bool enablePip;
+
+   ///Flag used to enable/disable retry feature
+   final bool enableRetry;
+
+   ///Flag used to show/hide audio tracks
+   final bool enableAudioTracks;
+
    ///Custom items of overflow menu
    final List<BetterPlayerOverflowMenuItem> overflowMenuCustomItems;
 
@@ -496,11 +589,26 @@ var betterPlayerConfiguration = BetterPlayerConfiguration(
    ///Icon of the qualities menu item from overflow menu
    final IconData qualitiesIcon;
 
+   ///Icon of the audios menu item from overflow menu
+   final IconData audioTracksIcon;
+
    ///Color of overflow menu icons
    final Color overflowMenuIconsColor;
 
-   ///Time which will be used once user uses rewind and forward
-   final int skipsTimeInMilliseconds;
+   ///Time which will be used once user uses forward
+   final int forwardSkipTimeInMilliseconds;
+
+   ///Time which will be used once user uses backward
+   final int backwardSkipTimeInMilliseconds;
+
+   ///Color of default loading indicator
+   final Color loadingColor;
+
+   ///Widget which can be used instead of default progress
+   final Widget loadingWidget;
+
+   ///Color of the background, when no frame is displayed.
+   final Color backgroundColor;
 ```
 
 ### BetterPlayerPlaylistConfiguration
@@ -520,6 +628,10 @@ Possible configuration options:
 
   ///Should videos be looped
   final bool loopVideos;
+
+  ///Index of video that will start on playlist start. Id must be less than
+  ///elements in data source list. Default is 0.
+  final int initialStartIndex;
 ```
 
 ### BetterPlayerDataSource
@@ -529,10 +641,10 @@ Define source for one video in your app. There are 3 types of data sources:
 * Memory - data source which uses list of bytes to play video from memory
 ```dart
     var dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.NETWORK,
+      BetterPlayerDataSourceType.network,
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
       subtitles: BetterPlayerSubtitlesSource(
-        type: BetterPlayerSubtitlesSourceType.FILE,
+        type: BetterPlayerSubtitlesSourceType.file,
         url: "${directory.path}/example_subtitles.srt",
       ),
       headers: {"header":"my_custom_header"}
@@ -567,6 +679,9 @@ Possible configuration options:
   ///Should player use hls tracks
   final bool useHlsTracks;
 
+  ///Should player use hls audio tracks
+  final bool useHlsAudioTracks;
+
   ///List of strings that represents tracks names.
   ///If empty, then better player will choose name based on track parameters
   final List<String> hlsTrackNames;
@@ -579,6 +694,30 @@ Possible configuration options:
 
   ///Optional cache configuration, used only for network data sources
   final BetterPlayerCacheConfiguration cacheConfiguration;
+
+  ///List of bytes, used only in memory player
+  final List<int> bytes;
+
+  ///Configuration of remote controls notification
+  final BetterPlayerNotificationConfiguration notificationConfiguration;
+
+  ///Duration which will be returned instead of original duration
+  final Duration overriddenDuration;
+
+  ///Video format hint when data source url has not valid extension.
+  final BetterPlayerVideoFormat videoFormat;
+
+  ///Extension of video without dot. Used only in memory data source.
+  final String videoExtension;
+
+  ///Configuration of content protection
+  final BetterPlayerDrmConfiguration drmConfiguration;
+
+  ///Placeholder widget which will be shown until video load or play. This
+  ///placeholder may be useful if you want to show placeholder before each video
+  ///in playlist. Otherwise, you should use placeholder from
+  /// BetterPlayerConfiguration.
+  final Widget placeholder;
 ```
 
 
@@ -602,7 +741,7 @@ Define cache configuration for given data source. Cache works only for network d
 Define source of subtitles in your video:
 ```dart
  var subtitles = BetterPlayerSubtitlesSource(
-        type: BetterPlayerSubtitlesSourceType.FILE,
+        type: BetterPlayerSubtitlesSourceType.file,
         url: "${directory.path}/example_subtitles.srt",
       );
 ```
@@ -661,23 +800,23 @@ https://flutter.dev/docs/development/accessibility-and-localization/internationa
 ### Listen to video events
 You can listen to video player events like:
 ```dart
-  INITIALIZED,
-  PLAY,
-  PAUSE,
-  SEEK_TO,
-  OPEN_FULLSCREEN,
-  HIDE_FULLSCREEN,
-  SET_VOLUME,
-  PROGRESS,
-  FINISHED,
-  EXCEPTION,
-  CONTROLS_VISIBLE,
-  CONTROLS_HIDDEN,
-  SET_SPEED,
-  CHANGED_SUBTITLES,
-  CHANGED_TRACK,
-  CHANGED_PLAYER_VISIBILITY,
-  CHANGED_RESOLUTION,
+  initialized,
+  play,
+  pause,
+  seekTo,
+  openFullscreen,
+  hideFullscreen,
+  setVolume,
+  progress,
+  finished,
+  exception,
+  controlsVisible,
+  controlsHidden,
+  setSpeed,
+  changedSubtitles,
+  changedTrack,
+  changedPlayerVisibility,
+  changedResolution
 ```
 
 After creating BetterPlayerController you can add event listener this way:
@@ -714,7 +853,7 @@ You can setup video with different resolutions. Use resolutions parameter in dat
 only for normal videos (non-hls) to setup different qualities of the original video.
 
 ```dart
-    var dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.NETWORK,
+    var dataSource = BetterPlayerDataSource(BetterPlayerDataSourceType.network,
         "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
         resolutions: {
           "LOW":
@@ -727,6 +866,56 @@ only for normal videos (non-hls) to setup different qualities of the original vi
               "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4"
         });
 ```
+### Setup player notification
+<table>
+  <tr>
+    <td>
+	    <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/feature/player_notifications/media/android_notification.png">
+    </td>
+    <td>
+       <img width="250px" src="https://raw.githubusercontent.com/jhomlala/betterplayer/feature/player_notifications/media/ios_notification.png">
+    </td>
+    <td>
+  </tr>
+ </table>
+
+To setup player notification use notificationConfiguration in BetterPlayerDataSource.
+
+```dart
+BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      Constants.elephantDreamVideoUrl,
+      notificationConfiguration: BetterPlayerNotificationConfiguration(
+        showNotification: true,
+        title: "Elephant dream",
+        author: "Some author",
+        imageUrl:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/1200px-African_Bush_Elephant.jpg",
+      ),
+    );
+```
+
+There are 3 majors parameters here:
+title - name of the resource, shown in first line
+author - author of the resource, shown in second line
+imageUrl - image of the resource (optional). Can be both link to external image or internal file.
+
+If showNotification is set as true and no title and author is provided, then empty notification will be
+displayed.
+
+User can control the player with notification buttons (i.e. play/pause, seek). When notification feature
+is used when there are more players at the same time, then last player will be used. Notification will
+be shown after play for the first time.
+
+To play resource after leaving the app, set handleLifecycle as false in your BetterPlayerConfiguration.
+
+Important note for android:
+You need to add special service in android native code. Service will simply destroy all remaining notifications. 
+This service need to be used to handle situation when app is killed without proper player destroying. 
+Check BetterPlayerService in example project to see how to add this service to your app.
+https://github.com/jhomlala/betterplayer/blob/feature/player_notifications/example/android/app/src/main/kotlin/com/jhomlala/better_player_example/BetterPlayerService.kt
+
+Here is an example of player with notification: https://github.com/jhomlala/betterplayer/blob/feature/player_notifications/example/lib/pages/notification_player_page.dart
+
 
 ### Add custom element to overflow menu
 You can use BetterPlayerControlsConfiguration to add custom element to the overflow menu:
@@ -752,6 +941,122 @@ If null then aspectRatio from BetterPlayerConfiguration will be used.
 ```dart
    betterPlayerController.setOverriddenAspectRatio(1.0);
 ```
+
+### Overridden duration
+If overridden duration is set then video player will play video until this duration.
+```dart
+BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      Constants.elephantDreamVideoUrl,
+      ///Play only 10 seconds of this video.
+      overriddenDuration: Duration(seconds: 10),
+    );
+```
+
+### (iOS only) Add into info.plist (to support fullscreen rotation):
+```xml
+<key>UISupportedInterfaceOrientations</key>
+<array>
+   <string>UIInterfaceOrientationPortrait</string>
+   <string>UIInterfaceOrientationLandscapeLeft</string>
+   <string>UIInterfaceOrientationLandscapeRight</string>
+</array>
+```
+
+### Picture in Picture
+Picture in Picture is not supported on all devices.
+iOS: iOS > 14.0
+Android: Android > 8.0, enough RAM, v2 android embedding
+
+Each OS provides method to check if given device supports PiP. If device doesn't support PiP, then
+error will be printed in console.
+
+To show PiP mode call this method:
+
+```dart
+ _betterPlayerController.enablePictureInPicture(_betterPlayerKey);
+```
+BetterPlayerKey is a key which is used in BetterPlayer widget:
+
+```dart
+ GlobalKey _betterPlayerKey = GlobalKey();
+ ...
+   AspectRatio(
+             aspectRatio: 16 / 9,
+             child: BetterPlayer(
+               controller: _betterPlayerController,
+               key: _betterPlayerKey,
+             ),
+           ),
+```
+
+To hide PiP mode call this method:
+```dart
+ _betterPlayerController.disablePictureInPicture();
+```
+
+PiP menu item is enabled as default in both Material and Cuperino controls. You can disable it with
+BetterPlayerControlsConfiguration's variable: enablePip. You can change PiP control menu icon with
+pipMenuIcon variable.
+
+Warning:
+Both Android and iOS PiP versions are in very early stage. There can be bugs and small issues. Please
+make sure that you've checked state of the PiP in Better Player before moving it to the production.
+
+Known limitations:
+Android: When PiP is enabled, Better Player will open full screen mode to play video correctly. When
+user disables PiP, Better Player will back to the previous settings and for a half of second your device
+will have incorrect orientation.
+
+### Set controls always visible
+```dart
+    betterPlayerController.setControlsAlwaysVisible(true);
+```
+
+### DRM
+To configure DRM for your data source, use drmConfiguration parameter. 
+Supported DRMs:
+
+* Token based (authorization header): Android/iOS
+* Widevine (licensue url + headers): Android
+
+Additional DRM types may be added in the future.
+
+Token based:
+```dart
+ BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      "url",
+      videoFormat: BetterPlayerVideoFormat.hls,
+      drmConfiguration: BetterPlayerDrmConfiguration(
+        drmType: BetterPlayerDrmType.token,
+        token:
+            "Bearer=token",
+      ),
+    );
+````
+
+Widevine (license url based):
+```dart
+ BetterPlayerDataSource _widevineDataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      "url",
+      drmConfiguration: BetterPlayerDrmConfiguration(
+        drmType: BetterPlayerDrmType.widevine,
+        licenseUrl:
+            "licenseUrl",
+        headers: {"header": "value"}
+      ),
+    );
+    _widevineController.setupDataSource(_widevineDataSource);
+
+```
+### Set mix audio with others
+You can enable mix with audio with others app with method:
+```dart
+betterPlayerController.setMixWithOthers(true)
+```
+Default value is false.
 
 ### More documentation
 https://pub.dev/documentation/better_player/latest/better_player/better_player-library.html

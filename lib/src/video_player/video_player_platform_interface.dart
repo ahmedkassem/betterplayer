@@ -2,14 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// Dart imports:
 import 'dart:async';
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
-import 'closed_caption_file.dart';
 import 'method_channel_video_player.dart';
 
 /// The interface that implementations of video_player must implement.
@@ -45,7 +48,7 @@ abstract class VideoPlayerPlatform {
     if (!instance.isMock) {
       try {
         instance._verifyProvidesDefaultImplementations();
-      } on NoSuchMethodError catch (_) {
+      } catch (_) {
         throw AssertionError(
             'Platform interfaces must not be implemented with `implements`');
       }
@@ -122,6 +125,37 @@ abstract class VideoPlayerPlatform {
     throw UnimplementedError('getPosition() has not been implemented.');
   }
 
+  /// Gets the video position as [DateTime].
+  Future<DateTime> getAbsolutePosition(int textureId) {
+    throw UnimplementedError('getAbsolutePosition() has not been implemented.');
+  }
+
+  ///Enables PiP mode.
+  Future<void> enablePictureInPicture(
+      int textureId, double top, double left, double width, double height) {
+    throw UnimplementedError(
+        'enablePictureInPicture() has not been implemented.');
+  }
+
+  ///Disables PiP mode.
+  Future<void> disablePictureInPicture(int textureId) {
+    throw UnimplementedError(
+        'disablePictureInPicture() has not been implemented.');
+  }
+
+  Future<bool> isPictureInPictureEnabled(int textureId) {
+    throw UnimplementedError(
+        'isPictureInPictureEnabled() has not been implemented.');
+  }
+
+  Future<void> setAudioTrack(int textureId, String name, int index) {
+    throw UnimplementedError('setAudio() has not been implemented.');
+  }
+
+  Future<void> setMixWithOthers(int textureId, bool mixWithOthers) {
+    throw UnimplementedError('setMixWithOthers() has not been implemented.');
+  }
+
   /// Returns a widget displaying the video with a given textureID.
   Widget buildView(int textureId) {
     throw UnimplementedError('buildView() has not been implemented.');
@@ -159,19 +193,24 @@ class DataSource {
   /// The [package] argument must be non-null when the asset comes from a
   /// package and null otherwise.
   ///
-  /// The [closedCaptionFile] argument is optional field to specify a file
-  /// containing the closed captioning.
   DataSource({
     @required this.sourceType,
     this.uri,
     this.formatHint,
     this.asset,
     this.package,
-    this.closedCaptionFile,
     this.headers,
     this.useCache = false,
     this.maxCacheSize = _maxCacheSize,
     this.maxCacheFileSize = _maxCacheFileSize,
+    this.showNotification = false,
+    this.title,
+    this.author,
+    this.imageUrl,
+    this.notificationChannelName,
+    this.overriddenDuration,
+    this.licenseUrl,
+    this.drmHeaders,
   }) : assert(uri == null || asset == null);
 
   /// Describes the type of data source this [VideoPlayerController]
@@ -216,13 +255,6 @@ class DataSource {
   /// [DataSourceType.asset] videos.
   final String package;
 
-  /// Optional field to specify a file containing the closed
-  /// captioning.
-  ///
-  /// This future will be awaited and the file will be loaded when
-  /// [initialize()] is called.
-  final Future<ClosedCaptionFile> closedCaptionFile;
-
   final Map<String, String> headers;
 
   final bool useCache;
@@ -230,6 +262,22 @@ class DataSource {
   final int maxCacheSize;
 
   final int maxCacheFileSize;
+
+  final bool showNotification;
+
+  final String title;
+
+  final String author;
+
+  final String imageUrl;
+
+  final String notificationChannelName;
+
+  final Duration overriddenDuration;
+
+  final String licenseUrl;
+
+  final Map<String, String> drmHeaders;
 
   /// Key to compare DataSource
   String get key {
@@ -240,7 +288,7 @@ class DataSource {
     } else if (package != null && package.isNotEmpty) {
       result = "$package:$asset";
     } else {
-      result = "$asset";
+      result = asset;
     }
 
     if (formatHint != null) {
@@ -252,7 +300,11 @@ class DataSource {
 
   @override
   String toString() {
-    return 'DataSource{sourceType: $sourceType, uri: $uri, formatHint: $formatHint, asset: $asset, package: $package, closedCaptionFile: $closedCaptionFile, headers: $headers, useCache: $useCache, maxCacheSize: $maxCacheSize, maxCacheFileSize: $maxCacheFileSize}';
+    return 'DataSource{sourceType: $sourceType, uri: $uri, formatHint:'
+        ' $formatHint, asset: $asset, package: $package, headers: $headers,'
+        ' useCache: $useCache,maxCacheSize: $maxCacheSize, maxCacheFileSize: '
+        '$maxCacheFileSize, showNotification: $showNotification, title: $title,'
+        ' author: $author}';
   }
 }
 
@@ -300,6 +352,7 @@ class VideoEvent {
     this.duration,
     this.size,
     this.buffered,
+    this.position,
   });
 
   /// The type of the event.
@@ -324,6 +377,9 @@ class VideoEvent {
   ///
   /// Only used if [eventType] is [VideoEventType.bufferingUpdate].
   final List<DurationRange> buffered;
+
+  ///Seek position
+  final Duration position;
 
   @override
   bool operator ==(Object other) {
@@ -364,6 +420,21 @@ enum VideoEventType {
 
   /// The video stopped to buffer.
   bufferingEnd,
+
+  /// The video is set to play
+  play,
+
+  /// The video is set to pause
+  pause,
+
+  /// The video is set to given to position
+  seek,
+
+  /// The video is displayed in Picture in Picture mode
+  pipStart,
+
+  /// Picture in picture mode has been dismissed
+  pipStop,
 
   /// An unknown event has been received.
   unknown,
@@ -414,6 +485,7 @@ class DurationRange {
   }
 
   @override
+  // ignore: no_runtimetype_tostring
   String toString() => '$runtimeType(start: $start, end: $end)';
 
   @override

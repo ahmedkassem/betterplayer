@@ -1,3 +1,5 @@
+// Flutter imports:
+// Project imports:
 import 'package:better_player/better_player.dart';
 import 'package:better_player/src/configuration/better_player_configuration.dart';
 import 'package:better_player/src/configuration/better_player_data_source.dart';
@@ -5,6 +7,7 @@ import 'package:better_player/src/core/better_player_utils.dart';
 import 'package:better_player/src/list/better_player_list_video_player_controller.dart';
 import 'package:flutter/material.dart';
 
+///Special version of Better Player which is used to play video in list view.
 class BetterPlayerListVideoPlayer extends StatefulWidget {
   ///Video to show
   final BetterPlayerDataSource dataSource;
@@ -62,7 +65,8 @@ class _BetterPlayerListVideoPlayerState
         playerVisibilityChangedBehavior: onVisibilityChanged,
       ),
       betterPlayerDataSource: widget.dataSource,
-      betterPlayerPlaylistConfiguration: BetterPlayerPlaylistConfiguration(),
+      betterPlayerPlaylistConfiguration:
+          const BetterPlayerPlaylistConfiguration(),
     );
 
     if (widget.betterPlayerListVideoPlayerController != null) {
@@ -92,8 +96,8 @@ class _BetterPlayerListVideoPlayerState
   }
 
   void onVisibilityChanged(double visibleFraction) async {
-    bool isPlaying = _betterPlayerController.isPlaying();
-    bool initialized = _betterPlayerController.isVideoInitialized();
+    final bool isPlaying = _betterPlayerController.isPlaying();
+    final bool initialized = _betterPlayerController.isVideoInitialized();
     if (visibleFraction >= widget.playFraction) {
       if (widget.autoPlay && initialized && !isPlaying && !_isDisposing) {
         _betterPlayerController.play();
