@@ -1,15 +1,11 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
 
 class BetterPlayerMaterialClickableWidget extends StatelessWidget {
   final Widget child;
-  final void Function() onTap;
+  final Function onTap;
 
-  const BetterPlayerMaterialClickableWidget({
-    Key key,
-    @required this.onTap,
-    @required this.child,
-  })  : assert(onTap != null),
+  const BetterPlayerMaterialClickableWidget({Key key, this.onTap, this.child})
+      : assert(onTap != null),
         assert(child != null),
         super(key: key);
 
@@ -22,8 +18,8 @@ class BetterPlayerMaterialClickableWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
         child: child,
+        onTap: onTap,
       ),
     );
   }

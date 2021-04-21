@@ -1,7 +1,4 @@
-// Flutter imports:
-// Project imports:
 import 'package:better_player/src/controls/better_player_progress_colors.dart';
-import 'package:better_player/src/core/better_player_controller.dart';
 import 'package:better_player/src/video_player/video_player.dart';
 import 'package:better_player/src/video_player/video_player_platform_interface.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +6,14 @@ import 'package:flutter/widgets.dart';
 
 class BetterPlayerCupertinoVideoProgressBar extends StatefulWidget {
   BetterPlayerCupertinoVideoProgressBar(
-    this.controller,
-    this.betterPlayerController, {
+    this.controller, {
     BetterPlayerProgressColors colors,
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key key,
-  })  : colors = colors ?? BetterPlayerProgressColors(),
-        super(key: key);
+  }) : colors = colors ?? BetterPlayerProgressColors();
 
   final VideoPlayerController controller;
-  final BetterPlayerController betterPlayerController;
   final BetterPlayerProgressColors colors;
   final Function() onDragStart;
   final Function() onDragEnd;
@@ -45,9 +38,6 @@ class _VideoProgressBarState
 
   VideoPlayerController get controller => widget.controller;
 
-  BetterPlayerController get betterPlayerController =>
-      widget.betterPlayerController;
-
   @override
   void initState() {
     super.initState();
@@ -66,58 +56,11 @@ class _VideoProgressBarState
       final box = context.findRenderObject() as RenderBox;
       final Offset tapPos = box.globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
-      if (relative > 0) {
-        final Duration position = controller.value.duration * relative;
-        controller.seekTo(position);
-      }
+      final Duration position = controller.value.duration * relative;
+      controller.seekTo(position);
     }
 
-    final bool enableProgressBarDrag = betterPlayerController
-        .betterPlayerConfiguration.controlsConfiguration.enableProgressBarDrag;
-
     return GestureDetector(
-      onHorizontalDragStart: (DragStartDetails details) {
-        if (!controller.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
-        _controllerWasPlaying = controller.value.isPlaying;
-        if (_controllerWasPlaying) {
-          controller.pause();
-        }
-
-        if (widget.onDragStart != null) {
-          widget.onDragStart();
-        }
-      },
-      onHorizontalDragUpdate: (DragUpdateDetails details) {
-        if (!controller.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
-        seekToRelativePosition(details.globalPosition);
-
-        if (widget.onDragUpdate != null) {
-          widget.onDragUpdate();
-        }
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        if (!enableProgressBarDrag) {
-          return;
-        }
-
-        if (_controllerWasPlaying) {
-          controller.play();
-        }
-        if (widget.onDragEnd != null) {
-          widget.onDragEnd();
-        }
-      },
-      onTapDown: (TapDownDetails details) {
-        if (!controller.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
-
-        seekToRelativePosition(details.globalPosition);
-      },
       child: Center(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -131,6 +74,44 @@ class _VideoProgressBarState
           ),
         ),
       ),
+      onHorizontalDragStart: (DragStartDetails details) {
+        if (!controller.value.initialized) {
+          return;
+        }
+        _controllerWasPlaying = controller.value.isPlaying;
+        if (_controllerWasPlaying) {
+          controller.pause();
+        }
+
+        if (widget.onDragStart != null) {
+          widget.onDragStart();
+        }
+      },
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        if (!controller.value.initialized) {
+          return;
+        }
+        seekToRelativePosition(details.globalPosition);
+
+        if (widget.onDragUpdate != null) {
+          widget.onDragUpdate();
+        }
+      },
+      onHorizontalDragEnd: (DragEndDetails details) {
+        if (_controllerWasPlaying) {
+          controller.play();
+        }
+        if (widget.onDragEnd != null) {
+          widget.onDragEnd();
+        }
+      },
+      onTapDown: (TapDownDetails details) {
+        if (!controller.value.initialized) {
+          return;
+        }
+
+        seekToRelativePosition(details.globalPosition);
+      },
     );
   }
 }
@@ -148,8 +129,8 @@ class _ProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const barHeight = 5.0;
-    const handleHeight = 6.0;
+    final barHeight = 5.0;
+    final handleHeight = 6.0;
     final baseOffset = size.height / 2 - barHeight / 2.0;
 
     canvas.drawRRect(
@@ -158,7 +139,7 @@ class _ProgressBarPainter extends CustomPainter {
           Offset(0.0, baseOffset),
           Offset(size.width, baseOffset + barHeight),
         ),
-        const Radius.circular(4.0),
+        Radius.circular(4.0),
       ),
       colors.backgroundPaint,
     );
@@ -169,7 +150,7 @@ class _ProgressBarPainter extends CustomPainter {
         value.position.inMilliseconds / value.duration.inMilliseconds;
     final double playedPart =
         playedPartPercent > 1 ? size.width : playedPartPercent * size.width;
-    for (final DurationRange range in value.buffered) {
+    for (DurationRange range in value.buffered) {
       final double start = range.startFraction(value.duration) * size.width;
       final double end = range.endFraction(value.duration) * size.width;
       canvas.drawRRect(
@@ -178,7 +159,7 @@ class _ProgressBarPainter extends CustomPainter {
             Offset(start, baseOffset),
             Offset(end, baseOffset + barHeight),
           ),
-          const Radius.circular(4.0),
+          Radius.circular(4.0),
         ),
         colors.bufferedPaint,
       );
@@ -189,7 +170,7 @@ class _ProgressBarPainter extends CustomPainter {
           Offset(0.0, baseOffset),
           Offset(playedPart, baseOffset + barHeight),
         ),
-        const Radius.circular(4.0),
+        Radius.circular(4.0),
       ),
       colors.playedPaint,
     );

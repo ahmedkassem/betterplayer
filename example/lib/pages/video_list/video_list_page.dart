@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:better_player_example/constants.dart';
-import 'package:better_player_example/model/video_list_data.dart';
+import 'package:better_player_example/pages/video_list/video_list_data.dart';
 import 'package:flutter/material.dart';
 
 import 'video_list_widget.dart';
@@ -19,7 +19,7 @@ class _VideoListPageState extends State<VideoListPage> {
     Constants.forBiggerJoyridesVideoUrl,
     Constants.elephantDreamVideoUrl,
   ];
-  List<VideoListData> dataList = [];
+  List<VideoListData> dataList = List();
   var value = 0;
 
   @override
@@ -42,7 +42,7 @@ class _VideoListPageState extends State<VideoListPage> {
       body: Container(
         color: Colors.grey,
         child: Column(children: [
-          TextButton(
+          FlatButton(
             child: Text("Update page state"),
             onPressed: () {
               setState(() {

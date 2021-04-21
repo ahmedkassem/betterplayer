@@ -18,7 +18,7 @@ class _ResolutionsPageState extends State<ResolutionsPage> {
       fit: BoxFit.contain,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
+      BetterPlayerDataSourceType.NETWORK,
       Constants.exampleResolutionsUrls.values.first,
       resolutions: Constants.exampleResolutionsUrls,
     );

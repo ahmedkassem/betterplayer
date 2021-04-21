@@ -1,16 +1,12 @@
-// Flutter imports:
-// Project imports:
 import 'package:better_player/better_player.dart';
 import 'package:better_player/src/configuration/better_player_translations.dart';
+import 'package:better_player/src/controls/better_player_controls_configuration.dart';
 import 'package:better_player/src/subtitles/better_player_subtitles_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'better_player_event.dart';
 
-///Configuration of Better Player. Allows to setup general behavior of player.
-///Master configuration which contains children that configure specific part
-///of player.
 class BetterPlayerConfiguration {
   /// Play the video as soon as it's displayed
   final bool autoPlay;
@@ -37,11 +33,6 @@ class BetterPlayerConfiguration {
 
   /// Should the placeholder be shown until play is pressed
   final bool showPlaceholderUntilPlay;
-
-  /// Placeholder position of player stack. If false, then placeholder will be
-  /// displayed on the bottom, so user need to hide it manually. Default is
-  /// true.
-  final bool placeholderOnTop;
 
   /// A widget which is placed between the video and the controls
   final Widget overlay;
@@ -99,18 +90,6 @@ class BetterPlayerConfiguration {
   /// ignored.
   final bool autoDetectFullscreenDeviceOrientation;
 
-  ///Defines flag which enables/disables lifecycle handling (pause on app closed,
-  ///play on app resumed). Default value is true.
-  final bool handleLifecycle;
-
-  ///Defines flag which enabled/disabled auto dispose of
-  ///[BetterPlayerController] on [BetterPlayer] dispose. When it's true and
-  ///[BetterPlayerController] instance has been attached to [BetterPlayer] widget
-  ///and dispose has been called on [BetterPlayer] instance, then
-  ///[BetterPlayerController] will be disposed.
-  ///Default value is true.
-  final bool autoDispose;
-
   const BetterPlayerConfiguration({
     this.aspectRatio,
     this.autoPlay = false,
@@ -119,7 +98,6 @@ class BetterPlayerConfiguration {
     this.fullScreenByDefault = false,
     this.placeholder,
     this.showPlaceholderUntilPlay = false,
-    this.placeholderOnTop = true,
     this.overlay,
     this.errorBuilder,
     this.allowedScreenSleep = true,
@@ -144,8 +122,6 @@ class BetterPlayerConfiguration {
     this.playerVisibilityChangedBehavior,
     this.translations,
     this.autoDetectFullscreenDeviceOrientation = false,
-    this.handleLifecycle = true,
-    this.autoDispose = true,
   });
 
   BetterPlayerConfiguration copyWith({
@@ -155,8 +131,6 @@ class BetterPlayerConfiguration {
     bool looping,
     bool fullScreenByDefault,
     Widget placeholder,
-    bool showPlaceholderUntilPlay,
-    bool placeholderOnTop,
     Widget overlay,
     bool showControlsOnInitialize,
     Widget Function(BuildContext context, String errorMessage) errorBuilder,
@@ -172,7 +146,7 @@ class BetterPlayerConfiguration {
     BoxFit fit,
     double rotation,
     Function(double visibilityFraction) playerVisibilityChangedBehavior,
-    List<BetterPlayerTranslations> translations,
+    BetterPlayerTranslations translations,
     bool autoDetectFullscreenDeviceOrientation,
   }) {
     return BetterPlayerConfiguration(
@@ -182,14 +156,9 @@ class BetterPlayerConfiguration {
       looping: looping ?? this.looping,
       fullScreenByDefault: fullScreenByDefault ?? this.fullScreenByDefault,
       placeholder: placeholder ?? this.placeholder,
-      showPlaceholderUntilPlay:
-          showPlaceholderUntilPlay ?? this.showPlaceholderUntilPlay,
-      placeholderOnTop: placeholderOnTop ?? this.placeholderOnTop,
       overlay: overlay ?? this.overlay,
       errorBuilder: errorBuilder ?? this.errorBuilder,
       allowedScreenSleep: allowedScreenSleep ?? this.allowedScreenSleep,
-      fullScreenAspectRatio:
-          fullScreenAspectRatio ?? this.fullScreenAspectRatio,
       deviceOrientationsOnFullScreen:
           deviceOrientationsOnFullScreen ?? this.deviceOrientationsOnFullScreen,
       systemOverlaysAfterFullScreen:

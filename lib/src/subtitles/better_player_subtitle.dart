@@ -1,5 +1,3 @@
-import 'package:better_player/src/core/better_player_utils.dart';
-
 class BetterPlayerSubtitle {
   static const String timerSeparator = ' --> ';
   final int index;
@@ -18,25 +16,25 @@ class BetterPlayerSubtitle {
     this.type,
   });
 
-  factory BetterPlayerSubtitle(String value, bool isWebVTT) {
+  factory BetterPlayerSubtitle(String value) {
     try {
       final scanner = value.split('\n');
       if (scanner.length == 2) {
         return _handle2LinesSubtitles(scanner);
       }
       if (scanner.length > 2) {
-        return _handle3LinesAndMoreSubtitles(scanner, isWebVTT);
+        return _handle3LinesAndMoreSubtitles(scanner);
       }
       return BetterPlayerSubtitle._();
     } catch (exception) {
-      BetterPlayerUtils.log("Failed to parse subtitle line: $value");
+      print("Failed to parse subtitle line: $value");
       return BetterPlayerSubtitle._();
     }
   }
 
-  static BetterPlayerSubtitle _handle2LinesSubtitles(List<String> scanner) {
+  static _handle2LinesSubtitles(List<String> scanner) {
     try {
-      final timeSplit = scanner[0].split(timerSeparator);
+      var timeSplit = scanner[0].split(timerSeparator);
       final start = _stringToDuration(timeSplit[0]);
       final end = _stringToDuration(timeSplit[1]);
       final texts = scanner.sublist(1, scanner.length);
@@ -44,33 +42,29 @@ class BetterPlayerSubtitle {
       return BetterPlayerSubtitle._(
           index: -1, start: start, end: end, texts: texts);
     } catch (exception) {
-      BetterPlayerUtils.log("Failed to parse subtitle line: $scanner");
+      print("Failed to parse subtitle line: $scanner");
       return BetterPlayerSubtitle._();
     }
   }
 
   static BetterPlayerSubtitle _handle3LinesAndMoreSubtitles(
-      List<String> scanner, bool isWebVTT) {
+      List<String> scanner) {
     try {
-      int index = -1;
-      List<String> timeSplit = [];
-      int firstLineOfText = 0;
-      if (scanner[0].contains(timerSeparator)) {
-        timeSplit = scanner[0].split(timerSeparator);
-        firstLineOfText = 1;
-      } else {
-        index = int.tryParse(scanner[0]);
-        timeSplit = scanner[1].split(timerSeparator);
-        firstLineOfText = 2;
+      if (scanner[0].isEmpty) {
+        scanner.removeAt(0);
       }
 
+      final index = int.tryParse(scanner[0]);
+
+      var timeSplit = scanner[1].split(timerSeparator);
       final start = _stringToDuration(timeSplit[0]);
       final end = _stringToDuration(timeSplit[1]);
-      final texts = scanner.sublist(firstLineOfText, scanner.length);
+      final texts = scanner.sublist(2, scanner.length);
+
       return BetterPlayerSubtitle._(
           index: index, start: start, end: end, texts: texts);
     } catch (exception) {
-      BetterPlayerUtils.log("Failed to parse subtitle line: $scanner");
+      print("Failed to parse subtitle line: $scanner");
       return BetterPlayerSubtitle._();
     }
   }
@@ -89,24 +83,24 @@ class BetterPlayerSubtitle {
 
       final component = componentValue.split(':');
       if (component.length != 3) {
-        return const Duration();
+        return Duration();
       }
 
-      final secsAndMillisSplitChar = component[2].contains(',') ? ',' : '.';
-      final secsAndMillsSplit = component[2].split(secsAndMillisSplitChar);
+      var secsAndMillisSplitChar = component[2].contains(',') ? ',' : '.';
+      var secsAndMillsSplit = component[2].split(secsAndMillisSplitChar);
       if (secsAndMillsSplit.length != 2) {
-        return const Duration();
+        return Duration();
       }
 
-      final result = Duration(
+      var result = Duration(
           hours: int.tryParse(component[0]),
           minutes: int.tryParse(component[1]),
           seconds: int.tryParse(secsAndMillsSplit[0]),
           milliseconds: int.tryParse(secsAndMillsSplit[1]));
       return result;
     } catch (exception) {
-      BetterPlayerUtils.log("Failed to process value: $value");
-      return const Duration();
+      print("Failed to process value: $value");
+      return Duration();
     }
   }
 }

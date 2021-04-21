@@ -1,5 +1,5 @@
 import 'package:better_player/better_player.dart';
-import 'package:better_player_example/model/video_list_data.dart';
+import 'package:better_player_example/pages/video_list/video_list_data.dart';
 import 'package:flutter/material.dart';
 
 class VideoListWidget extends StatefulWidget {
@@ -20,7 +20,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
   void initState() {
     super.initState();
     controller = BetterPlayerListVideoPlayerController();
-    betterPlayerConfiguration = BetterPlayerConfiguration(autoPlay: true);
+    betterPlayerConfiguration = BetterPlayerConfiguration(autoPlay: false);
   }
 
   @override
@@ -45,14 +45,7 @@ class _VideoListWidgetState extends State<VideoListWidget> {
           AspectRatio(
               child: BetterPlayerListVideoPlayer(
                 BetterPlayerDataSource(
-                  BetterPlayerDataSourceType.network,
-                  videoListData.videoUrl,
-                  notificationConfiguration:
-                      BetterPlayerNotificationConfiguration(
-                          showNotification: true,
-                          title: videoListData.videoTitle,
-                          author: "Test"),
-                ),
+                    BetterPlayerDataSourceType.NETWORK, videoListData.videoUrl),
                 configuration: BetterPlayerConfiguration(
                   autoPlay: false,
                   aspectRatio: 1,
@@ -75,21 +68,21 @@ class _VideoListWidgetState extends State<VideoListWidget> {
           ),
           Center(
             child: Wrap(children: [
-              ElevatedButton(
+              RaisedButton(
                 child: Text("Play"),
                 onPressed: () {
                   controller.play();
                 },
               ),
               const SizedBox(width: 8),
-              ElevatedButton(
+              RaisedButton(
                 child: Text("Pause"),
                 onPressed: () {
                   controller.pause();
                 },
               ),
               const SizedBox(width: 8),
-              ElevatedButton(
+              RaisedButton(
                 child: Text("Set max volume"),
                 onPressed: () {
                   controller.setVolume(100);

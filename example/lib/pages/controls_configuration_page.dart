@@ -23,10 +23,6 @@ class _ControlsConfigurationPageState extends State<ControlsConfigurationPage> {
       enableSkips: false,
       enableFullscreen: false,
       controlBarHeight: 60,
-      loadingColor: Colors.red,
-      overflowModalColor: Colors.indigo,
-      overflowModalTextColor: Colors.white,
-      overflowMenuIconsColor: Colors.white,
     );
 
     BetterPlayerConfiguration betterPlayerConfiguration =
@@ -35,7 +31,7 @@ class _ControlsConfigurationPageState extends State<ControlsConfigurationPage> {
             fit: BoxFit.contain,
             controlsConfiguration: controlsConfiguration);
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, Constants.elephantDreamVideoUrl);
+        BetterPlayerDataSourceType.NETWORK, Constants.forBiggerBlazesUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();

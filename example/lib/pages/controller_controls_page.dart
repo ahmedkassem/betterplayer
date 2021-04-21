@@ -18,7 +18,7 @@ class _ControllerControlsPageState extends State<ControllerControlsPage> {
       fit: BoxFit.contain,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, Constants.elephantDreamVideoUrl);
+        BetterPlayerDataSourceType.NETWORK, Constants.elephantDreamVideoUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();
@@ -28,7 +28,7 @@ class _ControllerControlsPageState extends State<ControllerControlsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Controller controls"),
+        title: Text("Controller controls page"),
       ),
       body: Column(
         children: [
@@ -36,8 +36,7 @@ class _ControllerControlsPageState extends State<ControllerControlsPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Control player with BetterPlayerController. You can control all"
-              "aspects of player without using UI of player.",
+              "Control player with BetterPlayerController",
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -47,18 +46,18 @@ class _ControllerControlsPageState extends State<ControllerControlsPage> {
           ),
           Wrap(
             children: [
-              TextButton(
+              FlatButton(
                   child: Text("Play"), onPressed: _betterPlayerController.play),
-              TextButton(
+              FlatButton(
                   child: Text("Pause"),
                   onPressed: _betterPlayerController.pause),
-              TextButton(
+              FlatButton(
                 child: Text("Hide controls"),
                 onPressed: () {
                   _betterPlayerController.setControlsVisibility(false);
                 },
               ),
-              TextButton(
+              FlatButton(
                 child: Text("Show controls"),
                 onPressed: () {
                   _betterPlayerController.setControlsVisibility(true);
