@@ -19,7 +19,7 @@ class _RotationAndFitPageState extends State<RotationAndFitPage> {
       rotation: 90,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, Constants.forBiggerBlazesUrl);
+        BetterPlayerDataSourceType.NETWORK, Constants.forBiggerBlazesUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     super.initState();
@@ -29,7 +29,7 @@ class _RotationAndFitPageState extends State<RotationAndFitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Rotation and fit"),
+        title: Text("Normal player"),
       ),
       body: Column(
         children: [

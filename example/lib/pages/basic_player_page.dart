@@ -27,9 +27,7 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
           ),
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: BetterPlayer.network(
-              Constants.forBiggerBlazesUrl,
-            ),
+            child: BetterPlayer.network(Constants.bugBuckBunnyVideoUrl),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

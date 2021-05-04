@@ -18,7 +18,7 @@ class _CachePageState extends State<CachePage> {
       fit: BoxFit.contain,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
+      BetterPlayerDataSourceType.NETWORK,
       Constants.forBiggerBlazesUrl,
       cacheConfiguration: BetterPlayerCacheConfiguration(useCache: true),
     );
@@ -31,7 +31,7 @@ class _CachePageState extends State<CachePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cache"),
+        title: Text("Normal player"),
       ),
       body: Column(
         children: [

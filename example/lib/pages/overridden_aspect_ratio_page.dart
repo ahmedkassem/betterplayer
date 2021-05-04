@@ -19,7 +19,7 @@ class _OverriddenAspectRatioPageState extends State<OverriddenAspectRatioPage> {
       fit: BoxFit.fill,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, Constants.forBiggerBlazesUrl);
+        BetterPlayerDataSourceType.NETWORK, Constants.forBiggerBlazesUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
     _betterPlayerController.setOverriddenAspectRatio(1.0);
@@ -30,7 +30,7 @@ class _OverriddenAspectRatioPageState extends State<OverriddenAspectRatioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Overridden aspect ratio"),
+        title: Text("Overridden aspect ratio player"),
       ),
       body: Column(
         children: [

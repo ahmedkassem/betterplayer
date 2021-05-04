@@ -19,12 +19,21 @@ class _NormalPlayerPageState extends State<NormalPlayerPage> {
       fit: BoxFit.contain,
     );
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      "http://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8",
-    );
+        BetterPlayerDataSourceType.NETWORK, Constants.forBiggerBlazesUrl);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);
+
     super.initState();
+    // _betterPlayerController.setControlsEnabled(false);
+    _betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.INITIALIZED) {
+        _betterPlayerController.setControlsEnabled(false);
+      }
+      if (event.betterPlayerEventType ==
+          BetterPlayerEventType.OPEN_FULLSCREEN) {
+        _betterPlayerController.setControlsEnabled(true);
+      }
+    });
   }
 
   @override
@@ -47,12 +56,21 @@ class _NormalPlayerPageState extends State<NormalPlayerPage> {
             aspectRatio: 16 / 9,
             child: BetterPlayer(controller: _betterPlayerController),
           ),
-          ElevatedButton(
+          RaisedButton(
+            child: Text("Play network data source"),
+            onPressed: () {
+              BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+                  BetterPlayerDataSourceType.NETWORK,
+                  Constants.forBiggerBlazesUrl);
+              _betterPlayerController.setupDataSource(dataSource);
+            },
+          ),
+          RaisedButton(
             child: Text("Play file data source"),
             onPressed: () async {
               String url = await Utils.getFileUrl(Constants.fileTestVideoUrl);
               BetterPlayerDataSource dataSource =
-                  BetterPlayerDataSource(BetterPlayerDataSourceType.file, url);
+                  BetterPlayerDataSource(BetterPlayerDataSourceType.FILE, url);
               _betterPlayerController.setupDataSource(dataSource);
             },
           ),
